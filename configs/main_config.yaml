@@ -1,0 +1,25 @@
+Location:
+    #path to the folder with config files defining monitoring tasks
+    #local path
+    monitor_configs: D:\MounSinai\Darpa\Programming\monitor_files\configs\monitoring
+
+    ignore_files:
+        - ".DS_Store"
+        - "study.cfg.yaml"
+
+    #name of the folder where all logs files will be stored
+    log_folder_name: logs
+    processed_folder_name: processed
+
+Logging:
+    #defines log levels to be used for "main" and "file" logs. Usual values are INFO and DEBUG
+    main_log_level: INFO  # DEBUG
+
+Email:
+    #default settings for sending emails
+    smtp_server: smtp.mssm.edu
+    smtp_server_port: 25
+    default_from_email: stas.rirak@mssm.edu
+    sent_to_emails: stasrirak.ms@gmail.com, stasrira@yahoo.com
+    send_emails: True # expected values: True, False
+

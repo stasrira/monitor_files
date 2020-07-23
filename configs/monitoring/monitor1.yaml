@@ -1,0 +1,15 @@
+Location:
+  source: D:\MounSinai\Darpa\Programming\monitor_files\data_file_examples\source\LAB24_SQL_test1.xlsx
+  destination: eval!'D:\MounSinai\Darpa\Programming\monitor_files\data_file_examples\\target\LAB24_SQL_test_{}.xlsx'.format(time.strftime("%Y%m%d_%H%M%S", time.localtime()))
+
+Monitoring:
+  item: file # item to be monitored. Possible values (may grow in the future): file
+  type: time_stamp # identification of what is monitored. Possible values: time_stamp
+  action: copy
+  frequency: 60 # frequency time given in seconds
+  email_notification: TRUE # possible values: TRUE, FALSE
+  email_cc: # list of email addresses to be notified in case of successful copying a file
+
+Last_sync:
+  date_time:
+  watch_value:
