@@ -6,6 +6,6 @@ Monitoring:
   action: copy
   email_cc: null
   email_notification: true
-  frequency: 60
+  frequency: 300 #in seconds
   item: file
   type: time_stamp

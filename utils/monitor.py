@@ -4,7 +4,6 @@ import time
 from datetime import datetime, timedelta
 import traceback
 from utils import ConfigData, Watcher, common as cm, global_const as gc
-# from utils import Watcher
 import shutil
 
 class Monitor():
@@ -28,8 +27,8 @@ class Monitor():
 
         if self.loaded:
             # get config file values
-            self.mtr_source_dir = self.mtr_cfg.get_value('Location/source_dir')
-            self.mtr_source_file = self.mtr_cfg.get_value('Location/source_file')
+            self.mtr_source_dir = Path(cm.eval_cfg_value(self.mtr_cfg.get_value('Location/source_dir'), self.log, None))
+            self.mtr_source_file = Path(self.mtr_cfg.get_value('Location/source_file'))
             found_file = cm.find_file_in_dir(self.mtr_source_dir, self.mtr_source_file)
             if found_file:
                 self.mtr_source = found_file[0]
@@ -62,25 +61,41 @@ class Monitor():
     def start_monitor(self):
 
         if self.mtr_source_path:
+            next_sync_datetime = None # default value
             # check if delay between monitoring events was fulfilled
-            if self.mtr_sync_date and isinstance(self.mtr_sync_date, datetime) and self.mtr_frequency.isnumeric():
-                next_sync_datetime = self.mtr_sync_date + timedelta(seconds=self.mtr_frequency)
-            else:
-                next_sync_datetime = None  # datetime.now() - + timedelta(seconds=1)
+            if self.mtr_sync_date and str(self.mtr_frequency).isnumeric():
+                try:
+                    next_sync_datetime = datetime.strptime(self.mtr_sync_date, gc.STAMP_DATETIME_FORMAT) + \
+                                         timedelta(seconds=self.mtr_frequency)
+                except Exception as ex:
+                    # report unexpected error to log file
+                    _str = 'Unexpected Error "{}" occurred during calculating next sync datetime. ' \
+                           'Saved sync date: "{}", sync frequency: "{}"\n{} ' \
+                        .format(ex, self.mtr_source, self.mtr_sync_date, self.mtr_frequency, traceback.format_exc())
+                    self.log.error(_str)
+                    # TODO: report error here
 
             if not next_sync_datetime or next_sync_datetime < datetime.now():
                 self.log.info('Monitoring delay of "{}" seconds has expired since the last syncronization event on {}. '
-                              'Proceeding to monitor "{}" file'
+                              'Proceeding to monitor "{}" file.'
                               .format(self.mtr_frequency if self.mtr_frequency else 'N/A',
                                       self.mtr_sync_date if self.mtr_sync_date else 'N/A',
                                       self.mtr_source
                                       )
                               )
-                custom_action = self.action_copy # set default value
+                custom_action = self.action_copy  # set default value
                 if self.mtr_action == 'copy':
                     custom_action = self.action_copy
-                watcher = Watcher(self.mtr_source_path, custom_action, self.mtr_item, self.mtr_type)
+                watcher = Watcher(self.mtr_source_path, custom_action, self.log, self.mtr_watch_value) # self.mtr_item, self.mtr_type)
                 watcher.watch()  # start the watch going
+
+                # update stats in the config file
+                datetime_stamp = time.strftime(gc.STAMP_DATETIME_FORMAT, time.localtime())
+                self.mtr_cfg_stamp.set_value(datetime_stamp, 'Last_sync/date_time')
+                self.log.info(
+                    'Datetime information for monitored file was recorded: Last_sync/date_time: {}'
+                        .format(datetime_stamp))
+
             else:
                 self.log.info('Monitoring delay of "{}" seconds has not expired since the last syncronization event on {}. '
                               .format(self.mtr_frequency if self.mtr_frequency else 'N/A',
@@ -93,14 +108,18 @@ class Monitor():
 
     def action_copy(self, file_time_stamp):
         self.log.info('Start copying "{}" to "{}"'.format(self.mtr_source, self.mtr_destin))
+        self.new_file_time_stamp = file_time_stamp
         try:
             shutil.copy(self.mtr_source_path, self.mtr_destin)
-            self.log.info('Copying process completed successfuly.')
+            self.log.info('Copying of "{}" to "{}" completed successfuly.'.format(self.mtr_source_path, self.mtr_destin))
+
 
             # update stats in the config file
-            # time.strftime("%Y%m%d_%H%M%S", time.localtime())
-            self.mtr_cfg_stamp.set_value(time.strftime("%Y%m%d_%H%M%S", time.localtime()), 'Last_sync/date_time')
+            # datetime_stamp = time.strftime(gc.STAMP_DATETIME_FORMAT, time.localtime())
+            # self.mtr_cfg_stamp.set_value(datetime_stamp, 'Last_sync/date_time')
             self.mtr_cfg_stamp.set_value(file_time_stamp, 'Last_sync/watch_value')
+            self.log.info('Stamp information for just copied file was recorded: '
+                          'Last_sync/watch_value: {}'.format(file_time_stamp))
 
             if self.mtr_email:
                 #TODO: implement sending email

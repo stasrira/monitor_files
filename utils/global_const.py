@@ -61,3 +61,5 @@ STUDY_EXCEL_WK_SHEET_NAME = 'wk_sheet_name'  # name of the worksheet name to be 
 
 # API processing related
 YAML_EVAL_FLAG = 'eval!'
+
+STAMP_DATETIME_FORMAT = "%Y%m%d_%H%M%S"

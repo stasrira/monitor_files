@@ -36,11 +36,23 @@ if __name__ == '__main__':
         (_, _, monitor_files) = next(walk(monitor_path))
         # print('Study dirs: {}'.format(dirstudies))
 
-        mlog.info('The following monitor request(s) are to be processed (count = {}): {}'.format(len(monitor_files), monitor_files))
+        mlog.info('The following monitor configs are to be processed (count = {}) in the monitor folder {}: {}'.format(len(monitor_files), monitor_path, monitor_files))
 
         for mnt_config in monitor_files:
-            mnt = Monitor(Path(monitor_path) / mnt_config, mlog, None)  #TODO: pass error object instead of None
-            mnt.start_monitor()
+            mlog.info('-------------------------------------------')
+            mlog.info('Start processing monitor config file: "{}".'.format(mnt_config))
+            try:
+                mnt = Monitor(Path(monitor_path) / mnt_config, mlog, None)  #TODO: pass error object instead of None
+                mnt.start_monitor()
+            except Exception as ex:
+                # report unexpected error to log file
+                _str = 'Unexpected Error "{}" occurred during processing monitor config file: {}\n{} ' \
+                    .format(ex, mnt_config, traceback.format_exc())
+                mlog.error(_str)
+            mlog.info('Finish processing monitor config file: "{}".'.format(mnt_config))
+        mlog.info('-------------------------------------------')
+        mlog.info('All monitor configs were processed (count = {}) in the monitor folder {}: {}'.format(
+            len(monitor_files), monitor_path, monitor_files))
 
     except Exception as ex:
         # report unexpected error to log file

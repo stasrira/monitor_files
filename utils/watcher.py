@@ -8,24 +8,28 @@ class Watcher(object):
     refresh_delay_secs = 60
 
     # Constructor
-    def __init__(self, watch_file, call_func_on_change=None, *args, **kwargs):
-        self._cached_stamp = 0
+    def __init__(self, watch_file, call_func_on_change, log_obj, saved_stamp = None):  #, *args, **kwargs
+        if saved_stamp:
+            self._cached_stamp = saved_stamp
+        else:
+            self._cached_stamp = 0
         self.filename = watch_file
         self.call_func_on_change = call_func_on_change
-        self.args = args
-        self.kwargs = kwargs
+        self.log_obj = log_obj
+        # self.args = args
+        # self.kwargs = kwargs
 
     # Look for changes
     def look(self):
         stamp = os.stat(self.filename).st_mtime
         if stamp != self._cached_stamp:
+            self.log_obj.info('The file\'s stamp got changed, proceeding to complete the monitoring actions.')
             self._cached_stamp = stamp
-            # File has changed, so do something...
-            # print('File changed')
-            # TODO: add log here
             if self.call_func_on_change is not None:
                 self.call_func_on_change(self._cached_stamp)
             self.running = False
+        else:
+            self.log_obj.info('The file\'s stamp was not changed, no monitoring actions will be performed.')
 
     # Keep watching in a loop
     def watch(self):
@@ -39,7 +43,7 @@ class Watcher(object):
             # break
         except FileNotFoundError:
             # Action on file not found
-            # TODO: Add log info about not found file
+            self.log_obj.warning('The monitoring file was not found, aborting the monitoring attempt.')
             # self.running = False
             pass
         # except:

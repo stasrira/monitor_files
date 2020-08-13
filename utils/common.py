@@ -4,9 +4,7 @@ import time
 import traceback
 from jinja2 import Environment, FileSystemLoader, escape
 from utils import global_const as gc
-# from utils import setup_logger_common  # TODO: figure out how to import setup_logger_common from utils module
 from .log_utils import setup_logger_common
-import shutil
 from os import walk
 import fnmatch
 
@@ -153,7 +151,7 @@ def perform_api_call(api_url, post_data, mlog_obj, error_obj):
 def eval_cfg_value(cfg_val, mlog_obj, error_obj, self_obj_ref = None):
     eval_flag = gc.YAML_EVAL_FLAG  # 'eval!'
 
-    # if self object is referenced in some of the config values, it will provide are reference to it
+    # if self object is referenced in some of the config values, it will provide a reference to it
     if self_obj_ref:
         self = self_obj_ref
     else:
