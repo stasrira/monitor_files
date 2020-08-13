@@ -6,7 +6,7 @@ import getpass
 from pathlib import Path
 import traceback
 import shutil
-from utils import Watcher
+from utils import Monitor
 from utils import ConfigData, common as cm, global_const as gc, send_email as email
 
 # if executed by itself, do the following
@@ -37,6 +37,10 @@ if __name__ == '__main__':
         # print('Study dirs: {}'.format(dirstudies))
 
         mlog.info('The following monitor request(s) are to be processed (count = {}): {}'.format(len(monitor_files), monitor_files))
+
+        for mnt_config in monitor_files:
+            mnt = Monitor(Path(monitor_path) / mnt_config, mlog, None)  #TODO: pass error object instead of None
+            mnt.start_monitor()
 
     except Exception as ex:
         # report unexpected error to log file

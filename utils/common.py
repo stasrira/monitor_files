@@ -7,6 +7,8 @@ from utils import global_const as gc
 # from utils import setup_logger_common  # TODO: figure out how to import setup_logger_common from utils module
 from .log_utils import setup_logger_common
 import shutil
+from os import walk
+import fnmatch
 
 
 def get_project_root():
@@ -188,3 +190,18 @@ def populate_email_template(template_name, template_feeder):
     output = template.render(process=template_feeder)
     # print(output)
     return output
+
+# function finds file(s) matching given pattern in the given directory
+def find_file_in_dir(dir, file_name, return_first_match_only=None):
+    if not return_first_match_only:
+        return_first_match_only = True
+    out = []
+
+    (_, _, files) = next(walk(dir))
+    for file in files:
+        if file:
+            if fnmatch.fnmatch(file, file_name):
+                out.append(file)
+                if return_first_match_only:
+                    return out
+    return out

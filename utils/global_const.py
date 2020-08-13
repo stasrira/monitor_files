@@ -12,7 +12,6 @@ MAIN_CONFIG_FILE = \
 # study level default name for the config file
 DEFAULT_STUDY_CONFIG_FILE = 'study.cfg.yaml'
 
-
 # name of the folder where all logs files will be stored
 # name for the each type of log
 MAIN_LOG_NAME = 'main_log'
@@ -21,6 +20,7 @@ FILE_LOG_NAME = 'file_processing_log'
 #default folder names for logs and processed files
 LOG_FOLDER_NAME = 'logs'
 PROCESSED_FOLDER_NAME = 'processed'
+STAMPS_FILES_FOLDER_NAME = 'stamps'
 
 # predefined paths in the main config file for various variables
 # STUDY_LOGGER_NAME_CFG_PATH = 'Logging/file_log_name'

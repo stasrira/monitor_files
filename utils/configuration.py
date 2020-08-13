@@ -69,6 +69,8 @@ class ConfigData:
         out = False
 
         path_elems = yaml_path.split(delim)
+        if not self.cfg:
+            self.cfg = {}
         upd_item = self.cfg
         num_items = len(path_elems)
         cnt = 0
@@ -95,6 +97,7 @@ class ConfigData:
                     upd_item[el] = value
                     out = True
 
+        # self.cfg = upd_item
         if cm.file_exists(self.cfg_path):
             with open(self.cfg_path, 'w') as yaml_file:
                 yaml_file.write(yaml.dump(self.cfg, default_flow_style=False))
