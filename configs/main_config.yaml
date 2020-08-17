@@ -23,3 +23,10 @@ Email:
     sent_to_emails: stasrirak.ms@gmail.com, stasrira@yahoo.com
     send_emails: True # expected values: True, False
 
+Validate:
+    # list of environment variable required to be set for a current user in order to run the application
+    environment_variables:
+        box_monitoring: # default list of variables required for all runs
+            - APP_MNT_BOX
+
+

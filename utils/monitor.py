@@ -45,8 +45,8 @@ class Monitor():
             self.mtr_type = self.mtr_cfg.get_value('Monitoring/type')
             self.mtr_action = self.mtr_cfg.get_value('Monitoring/action')
             self.mtr_frequency = self.mtr_cfg.get_value('Monitoring/frequency')
-            self.mtr_email = self.mtr_cfg.get_value('Monitoring/email_notification')
-            self.mtr_email_cc = self.mtr_cfg.get_value('Monitoring/email_cc')
+            # self.mtr_email = self.mtr_cfg.get_value('Monitoring/email_notification')
+            # self.mtr_email_cc = self.mtr_cfg.get_value('Monitoring/email_cc')
             # load stamp info from stamp config file
             self.mtr_sync_date = self.mtr_cfg_stamp.get_value('Last_sync/date_time')
             self.mtr_watch_value = self.mtr_cfg_stamp.get_value('Last_sync/watch_value')

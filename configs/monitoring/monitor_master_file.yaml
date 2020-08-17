@@ -8,5 +8,5 @@ Monitoring:
   type: time_stamp # identification of what is monitored. Possible values: time_stamp
   action: copy
   frequency: 60 # frequency time given in seconds
-  email_notification: TRUE # possible values: TRUE, FALSE
-  email_cc: # list of email addresses to be notified in case of successful copying a file
+  # email_notification: TRUE # possible values: TRUE, FALSE
+  # email_cc: # list of email addresses to be notified in case of successful copying a file
