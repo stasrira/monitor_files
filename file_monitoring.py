@@ -5,7 +5,8 @@ import getpass
 from pathlib import Path
 import traceback
 from utils import Monitor
-from utils import ConfigData, common as cm, global_const as gc, send_email as email
+from utils import ConfigData, common as cm, common2 as cm2, global_const as gc, send_yagmail #, send_email as email
+
 
 # if executed by itself, do the following
 if __name__ == '__main__':
@@ -22,10 +23,32 @@ if __name__ == '__main__':
     # Verify that target directory (df_path) is accessible for the current user (under which the app is running)
     # Identify the user under which the app is running if the df_path is not accessible
     if not os.path.exists(monitor_path):
-        mlog.error('Directory "{}" does not exist or not accessible for the current user. Aborting execution. '
-                   'Expected user login: "{}", Effective user: "{}"  '.format(monitor_path, os.getlogin(),
-                                                                              getpass.getuser()))
+        _str = 'Directory "{}" does not exist or not accessible for the current user. Aborting execution. ' \
+               'Expected user login: "{}", Effective user: "{}"'.format(monitor_path, os.getlogin(),getpass.getuser())
+        mlog.error(_str)
+
+        # send notification email alerting about the error case
+        email_subject = 'Error occurred during running file_monitoring tool.'
+        email_body = 'The following error caused interruption of execution of the application<br/>' \
+                     + str(Path(os.path.abspath(__file__))) \
+                     + '<br/><br/><font color="red">' \
+                     + _str + '</font>'
+        try:
+            send_yagmail(
+                emails_to=m_cfg.get_value('Email/sent_to_emails'),
+                subject=email_subject,
+                message=email_body
+                # ,attachment_path = email_attchms_study
+            )
+        except Exception as ex:
+            # report unexpected error during sending emails to a log file and continue
+            _str = 'Unexpected Error "{}" occurred during an attempt to send email upon ' \
+                   'finishing execution of file monitoring app.\n{}'.format(ex, traceback.format_exc())
+            mlog.critical(_str)
         exit(1)
+
+    # Validate expected environment variables; if some variable are not present, abort execution
+    cm2.validate_available_envir_variables(mlog, m_cfg, ['box_monitoring'], str(Path(os.path.abspath(__file__))))
 
     try:
 
@@ -80,7 +103,7 @@ if __name__ == '__main__':
 
         try:
             if m_cfg.get_value('Email/send_emails'):
-                email.send_yagmail(
+                send_yagmail(
                     # TODO: add email addresses from a local config files
                     emails_to=m_cfg.get_value('Email/sent_to_emails'),
                     subject=email_subject,
@@ -90,8 +113,7 @@ if __name__ == '__main__':
         except Exception as ex:
             # report unexpected error during sending emails to a log file and continue
             _str = 'Unexpected Error "{}" occurred during an attempt to send email upon ' \
-                   'finishing processing "{}" study: {}\n{} ' \
-                .format(ex, st_dir, os.path.abspath(__file__), traceback.format_exc())
+                   'finishing execution of file monitoring app.\n{}'.format(ex, traceback.format_exc())
             mlog.critical(_str)
 
     except Exception as ex:

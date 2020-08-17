@@ -1,12 +1,12 @@
 Location:
-  source_dir: eval!os.environ.get('APP_MNT_BOX') + '/master_file/' # D:\MounSinai\Darpa\Programming\monitor_files\data_file_examples\source\master_file\
+  source_dir: eval!os.environ.get('APP_MNT_BOX') + '/Navy_Charm_Meta_Data/processed/' # /home/stas/mnt/box/Navy_Charm_Meta_Data/processed/
   source_file: charm_master.xlsx
-  destination: D:\MounSinai\Darpa\Programming\monitor_files\data_file_examples\\target\  # LAB24_SQL_test_{}.xlsx'.format(time.strftime("%Y%m%d_%H%M%S", time.localtime()))
+  destination: /mnt/researchsan02a/Metadata_Processing/ECHO_PI-CHARM-Master-Metadata
 
 Monitoring:
   item: file # item to be monitored. Possible values (may grow in the future): file
   type: time_stamp # identification of what is monitored. Possible values: time_stamp
   action: copy
-  frequency: 60 # frequency time given in seconds
-  email_notification: TRUE # possible values: TRUE, FALSE
-  email_cc: # list of email addresses to be notified in case of successful copying a file
+  frequency: 60 # # minimum delay between retrieval attempts (in seconds)
+  # email_notification: TRUE # possible values: TRUE, FALSE
+  # email_cc: # list of email addresses to be notified in case of successful copying a file
