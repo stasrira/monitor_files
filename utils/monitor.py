@@ -130,10 +130,6 @@ class Monitor():
             self.log.info('Stamp information for just copied file was recorded: '
                           'Last_sync/watch_value: {}'.format(file_time_stamp))
 
-            if self.mtr_email:
-                #TODO: implement sending email
-                pass
-
         except Exception as ex:
             # report unexpected error to log file
             _str = 'Unexpected Error "{}" occurred during copying file "{}" to "{}"\n{} ' \

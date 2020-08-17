@@ -109,5 +109,5 @@ venv.bak/
 #pycharm workspace file
 .idea/workspace.xml
 
-/data_file_examples
-/monitoring/stamps
+data_file_examples/
+configs/monitoring/stamps/
