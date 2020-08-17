@@ -1,0 +1,27 @@
+File path being monitored:
+<br/><b>{{process.source_file_path}}</b>
+<br/>Configuration file: {{process.confg_file_name}}
+<br/>Log file for this process: {{process.log_file}}
+<br/><br/>
+{% if process.action_completed %}
+<font color="green">The new version of the file <b>{{process.source_file_name}}</b> was retrieved to
+    <br/> "{{process.destination}}". </font>
+{% else %}
+    <b>No new version of the file was retrieved.</b>
+{% endif %}
+<br/><br/>
+<b>Status</b> messages collected by the process:
+<ul>
+{% for status in process.status_lst %}
+    <li>{{status}}</li>
+{% endfor %}
+</ul>
+
+<b>Errors:</b>
+<br/>
+{% if process.file_errors_present == True %}
+    <font color="red"><b>Errors present - check log file for details!</b></font>
+{% else %}
+    <font color="green">No errors</font>
+{% endif %}
+

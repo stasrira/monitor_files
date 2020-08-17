@@ -4,7 +4,7 @@ Location:
   source_file: LAB24_SQL_test1.xlsx
 Monitoring:
   action: copy
-  email_cc: null
+  email_cc:
   email_notification: true
   frequency: 300 #in seconds
   item: file

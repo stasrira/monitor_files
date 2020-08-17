@@ -8,14 +8,15 @@ class Watcher(object):
     refresh_delay_secs = 60
 
     # Constructor
-    def __init__(self, watch_file, call_func_on_change, log_obj, saved_stamp = None):  #, *args, **kwargs
+    def __init__(self, watch_file, call_func_on_change, mnt_obj, saved_stamp = None):  #, *args, **kwargs
         if saved_stamp:
             self._cached_stamp = saved_stamp
         else:
             self._cached_stamp = 0
         self.filename = watch_file
         self.call_func_on_change = call_func_on_change
-        self.log_obj = log_obj
+        self.log_obj = mnt_obj.log
+        self.mnt_obj = mnt_obj
         # self.args = args
         # self.kwargs = kwargs
 
@@ -29,7 +30,9 @@ class Watcher(object):
                 self.call_func_on_change(self._cached_stamp)
             self.running = False
         else:
-            self.log_obj.info('The file\'s stamp was not changed, no monitoring actions will be performed.')
+            _str = 'The file\'s stamp was not changed, no monitoring actions will be performed.'
+            self.log_obj.info(_str)
+            self.mnt_obj.status.append(_str)
 
     # Keep watching in a loop
     def watch(self):

@@ -4,7 +4,7 @@ Location:
   source_file: CHARM age_sex*_updated.xlsx
 Monitoring:
   action: copy
-  email_cc: null
+  email_cc:
   email_notification: true
   frequency: 300
   item: file

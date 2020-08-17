@@ -87,7 +87,8 @@ def setup_logger(m_cfg, log_dir_location, cur_proc_name_prefix = None):
 
     lg = setup_logger_common(common_logger_name, logging_level, wrkdir, lg_filename)  # logging_level
     mlog = lg['logger']
-    return mlog
+    log_handler = lg['handler']
+    return mlog, log_handler
 
 
 # this function performs actual API call to the remote server
