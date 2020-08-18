@@ -72,8 +72,11 @@ if __name__ == '__main__':
             mlog.info('Finish processing monitor config file: "{}".'.format(mnt_config))
             # create a dictionary to feed into template for preparing an email body
             template_feeder = {
-                'source_file_path': str(mnt.mtr_source_path),
-                'source_file_name': Path(os.path.abspath(mnt.mtr_source_path)).name,
+                'source_file_path': '{}/{}'.format(str(mnt.mtr_source_dir), str(mnt.mtr_source_file)),
+                'source_identified': str(mnt.mtr_source_path),
+                'source_file_name': Path(os.path.abspath(mnt.mtr_source_path)).name
+                                    if mnt.mtr_source_path
+                                    else 'N/A',
                 'confg_file_name': str(mnt.mtr_cfg_path),
                 'destination': mnt.mtr_destin,
                 'action_completed': mnt.action_completed,
