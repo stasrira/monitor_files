@@ -1,7 +1,7 @@
 Location:
   destination: /mnt/researchsan02a/Metadata_Processing/ECHO_PI-CHARM_demographic_feed
   source_dir: eval!os.environ.get('APP_MNT_BOX') + '/Navy_Charm_Meta_Data/demography/' # /home/stas/mnt/box/Navy_Charm_Meta_Data/demography
-  source_file: CHARM age_sex*_updated.xlsx
+  source_file: CHARM age_sex*.xlsx
 Monitoring:
   action: copy
   # email_cc:

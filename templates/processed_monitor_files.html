@@ -4,7 +4,7 @@ File path being monitored:
     {% if process.source_identified != "None" %}
         <span style="color:green">{{process.source_identified}}</span>
     {% else %}
-        <span color="black">{{process.source_identified}}</span>
+        <span style="color:red">{{process.source_identified}}</span>
     {% endif %}
     </b>
 <br/>Configuration file: {{process.confg_file_name}}
