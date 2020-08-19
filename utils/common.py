@@ -157,7 +157,7 @@ def populate_email_template(template_name, template_feeder):
 
 # function finds file(s) matching given pattern in the given directory
 def find_file_in_dir(dir, file_name, return_first_match_only=None):
-    if not return_first_match_only:
+    if return_first_match_only is None:
         return_first_match_only = True
     out = []
 

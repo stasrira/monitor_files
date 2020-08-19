@@ -29,17 +29,25 @@ class Monitor():
         self.verify_config_stamp_file(stamp_file)
         self.mtr_cfg_stamp = ConfigData(stamp_file)
 
+        self.mtr_source = None
+        self.mtr_source_path = None
+
         if self.loaded:
             # get config file values
             self.mtr_source_dir = Path(cm.eval_cfg_value(self.mtr_cfg.get_value('Location/source_dir'), self.log, None))
             self.mtr_source_file = Path(self.mtr_cfg.get_value('Location/source_file'))
-            found_file = cm.find_file_in_dir(self.mtr_source_dir, self.mtr_source_file)
-            if found_file:
-                self.mtr_source = found_file[0]
+            found_files = cm.find_file_in_dir(self.mtr_source_dir, self.mtr_source_file, False)
+            if found_files:
+                ff_stamp = None
+                for file_match in found_files:
+                    if not ff_stamp or ff_stamp < os.stat(Path(self.mtr_source_dir) / file_match).st_mtime:
+                        ff_stamp = os.stat(Path(self.mtr_source_dir) / file_match).st_mtime
+                        self.mtr_source = file_match
+                # self.mtr_source = found_files[0]
                 self.mtr_source_path = Path(self.mtr_source_dir) / self.mtr_source
-            else:
-                self.mtr_source = None
-                self.mtr_source_path = None
+            # else:
+            #    self.mtr_source = None
+            #    self.mtr_source_path = None
             self.mtr_destin = self.mtr_cfg.get_value('Location/destination')
             self.mtr_item = self.mtr_cfg.get_value('Monitoring/item')
             self.mtr_type = self.mtr_cfg.get_value('Monitoring/type')
